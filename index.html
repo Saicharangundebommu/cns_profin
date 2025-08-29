@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Encryption & Decryption Tool</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+  <div class="container">
+    <h1>🔐 Universal Text Encryption & Decryption Tool</h1>
+
+    <div class="form-group">
+      <label for="plaintext">Enter Text:</label>
+      <textarea id="plaintext" placeholder="Type your message..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="algorithm">Choose Algorithm:</label>
+      <select id="algorithm">
+        <optgroup label="Classical Ciphers">
+          <option value="caesar">Caesar Cipher</option>
+          <option value="monoalpha">Monoalphabetic Cipher</option>
+          <option value="polyalpha">Polyalphabetic Cipher</option>
+          <option value="hill">Hill Cipher</option>
+          <option value="playfair">Playfair Cipher</option>
+        </optgroup>
+        <optgroup label="Modern Ciphers">
+          <option value="aes">AES</option>
+          <option value="des">DES</option>
+          <option value="rsa">RSA</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="key">Enter Key:</label>
+      <input type="text" id="key" placeholder="Enter key (depends on algorithm)">
+    </div>
+
+    <!-- Button group with colors applied via classes -->
+    <div class="btn-group">
+      <button class="encrypt" onclick="encryptText()">Encrypt</button>
+      <button class="decrypt" onclick="decryptText()">Decrypt</button>
+      <button class="clear" onclick="clearFields()">Clear</button>
+    </div>
+
+    <div class="form-group">
+      <label for="result">Result:</label>
+      <textarea id="result" readonly></textarea>
+    </div>
+
+    <div class="btn-group">
+      <button class="download" onclick="saveFile()">💾 Save Result</button>
+    </div>
+  </div>
+
+  <!-- CryptoJS for AES/DES/RSA -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  
+  <!-- Matrix Background Animation -->
+  <script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@#$%^&*()';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 33);
+
+    window.addEventListener('resize', () => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
+  </script>
+
+  <!-- External JS (your encryption logic) -->
+  <script src="script.js"></script>
+</body>
+</html>
